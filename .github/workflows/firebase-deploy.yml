@@ -1,0 +1,83 @@
+name: Build Android APK & Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  contents: read
+  deployments: write
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Set up Java JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      # 3. Setup Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      # 4. Decode Debug Keystore (Optional but ensures build succeeds with signing)
+      - name: Decode Keystore
+        run: |
+          if [ -f "debug.keystore.base64" ]; then
+            echo "Decoding debug keystore..."
+            mkdir -p ~/.android
+            base64 -d debug.keystore.base64 > app/debug.keystore || echo "Keystore decode failed, using default gradle build"
+          fi
+
+      # 5. Build Android Debug APK
+      - name: Build Android App (APK)
+        run: gradle :app:assembleDebug
+
+      # 6. Copy Built APK to Firebase Hosting Public Folder
+      - name: Copy APK to Web Directory
+        run: |
+          mkdir -p firebase_hosting/public
+          if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
+            cp app/build/outputs/apk/debug/app-debug.apk firebase_hosting/public/app-release.apk
+            echo "✅ APK copied successfully!"
+          elif [ -f "app/build/outputs/apk/debug/app-release-unsigned.apk" ]; then
+            cp app/build/outputs/apk/debug/app-release-unsigned.apk firebase_hosting/public/app-release.apk
+            echo "✅ Unsigned APK copied successfully!"
+          else
+            echo "❌ APK build output not found! Checking build directory:"
+            find app/build/ -name "*.apk" || true
+            exit 1
+          fi
+
+      # 7. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 8. Deploy to Firebase Hosting using service account file from GitHub Secrets
+      - name: Deploy to Firebase Hosting
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT_JSON" ]; then
+            echo "❌ FIREBASE_SERVICE_ACCOUNT secret is missing! Skipped hosting deploy."
+            exit 1
+          fi
+          echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > firebase-service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS="${{ github.workspace }}/firebase_hosting/firebase-service-account.json"
+          npx firebase-tools deploy --only hosting --project prime-khatab
+          rm firebase-service-account.json
+        working-directory: firebase_hosting

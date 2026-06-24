@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starbucks PSP - Join & Earn</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sbGreen: '#006241',
+                        sbLightGreen: '#d4e9e2',
+                        sbDark: '#1e3932',
+                        sbGold: '#cba258',
+                        sbAccent: '#008248'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .marble-bg {
+            background: radial-gradient(circle at 0% 0%, #1e3932 0%, #006241 100%);
+        }
+        .animate-bounce-slow {
+            animation: bounce 3s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-5%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header Section -->
+    <header class="bg-sbDark text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-sbGold shadow-sm overflow-hidden">
+                    <!-- Starbucks Siren SVG -->
+                    <svg viewBox="0 0 100 100" class="w-8 h-8 fill-sbGreen">
+                        <circle cx="50" cy="50" r="48" fill="#006241"/>
+                        <circle cx="50" cy="50" r="42" fill="none" stroke="#fff" stroke-width="2"/>
+                        <path d="M50 15c-19.3 0-35 15.7-35 35s15.7 35 35 35 35-15.7 35-35-15.7-35-35-35zm0 6c16 0 29 13 29 29s-13 29-29 29-29-13-29-29 13-29 29-29z" fill="#fff"/>
+                        <path d="M50 28c-3.3 0-6 2.7-6 6 0 1 .3 2 .8 2.8L40 45h20l-4.8-8.2c.5-.8.8-1.8.8-2.8 0-3.3-2.7-6-6-6zm0 18c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7z" fill="#fff"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-extrabold tracking-tight text-white">Starbucks <span class="text-sbGold">PSP</span></span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="bg-emerald-950 text-emerald-300 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-800">
+                    <i class="fa-solid fa-shield-halved mr-1"></i> Verified Partner
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-lg w-full mx-auto px-4 py-8">
+        
+        <!-- Referral Box Card -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 mb-8 transition-all hover:shadow-2xl duration-300">
+            <!-- Green Gradient Top Header -->
+            <div class="marble-bg text-white p-6 text-center relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-emerald-700 rounded-full opacity-20"></div>
+                <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-emerald-600 rounded-full opacity-15"></div>
+                
+                <i class="fa-solid fa-gift text-sbGold text-4xl mb-3 animate-bounce-slow"></i>
+                <h1 class="text-2xl font-bold">You're Invited!</h1>
+                <p class="text-emerald-100 text-sm mt-1">Your friend has invited you to join Starbucks PSP & earn together.</p>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-6">
+                <!-- Referral Code Display -->
+                <div class="bg-gray-50 border-2 border-dashed border-emerald-200 rounded-2xl p-4 text-center mb-6">
+                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-widest block mb-1">Your Referral Code</span>
+                    <div class="flex items-center justify-center space-x-3">
+                        <span id="referral-code-text" class="text-3xl font-black text-sbDark tracking-wide">SB1001</span>
+                        <button onclick="copyReferralCode()" class="bg-emerald-100 hover:bg-emerald-200 text-sbGreen p-2.5 rounded-xl transition duration-150 focus:outline-none" title="Copy Code">
+                            <i id="copy-icon" class="fa-regular fa-copy text-lg"></i>
+                        </button>
+                    </div>
+                    <span id="copy-toast" class="text-xs text-sbGreen font-medium mt-1 inline-block opacity-0 transition-opacity duration-300">
+                        <i class="fa-solid fa-circle-check mr-1"></i> Copied to clipboard!
+                    </span>
+                </div>
+
+                <!-- Incentive Info -->
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-emerald-50 text-emerald-600 p-2 rounded-lg mt-0.5">
+                            <i class="fa-solid fa-sack-dollar text-base"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">Free Signup Bonus</h4>
+                            <p class="text-gray-500 text-xs">Register today using this referral code to instantly claim a signup bonus.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-emerald-50 text-emerald-600 p-2 rounded-lg mt-0.5">
+                            <i class="fa-solid fa-chart-line text-base"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">High Yield Investments</h4>
+                            <p class="text-gray-500 text-xs">Invest in Espresso, Cold Brew, or Latte plans to receive highly profitable daily earnings.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-emerald-50 text-emerald-600 p-2 rounded-lg mt-0.5">
+                            <i class="fa-solid fa-users text-base"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">Unlimited Referrals</h4>
+                            <p class="text-gray-500 text-xs">Share your link and earn an amazing commission of ₹2.00 plus recurring passive bonus for every direct active member.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3">
+                    <!-- Button 1: Download APK -->
+                    <a id="download-btn" href="./app-release.apk" download class="w-full bg-sbGreen hover:bg-sbAccent text-white font-extrabold text-center py-4 px-6 rounded-2xl flex items-center justify-center space-x-2 shadow-lg transition-all transform hover:-translate-y-0.5 duration-150">
+                        <i class="fa-solid fa-circle-arrow-down text-lg"></i>
+                        <span>DOWNLOAD APP (APK)</span>
+                    </a>
+
+                    <!-- Button 2: Deep Link (Open Directly) -->
+                    <a id="open-app-btn" href="https://prime-khatab.web.app/register?ref=SB1001" class="w-full bg-sbLightGreen hover:bg-emerald-200 text-sbDark font-bold text-center py-3.5 px-6 rounded-2xl flex items-center justify-center space-x-2 transition duration-150">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                        <span>ALREADY INSTALLED? OPEN APP</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Installation Guide -->
+        <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
+            <h3 class="font-extrabold text-gray-800 mb-4 flex items-center text-sm">
+                <i class="fa-solid fa-circle-info text-sbGreen mr-2"></i> How to Get Started:
+            </h3>
+            <ol class="space-y-4 text-xs text-gray-600 relative border-l border-gray-200 pl-4 ml-2">
+                <li class="relative">
+                    <span class="absolute -left-[25px] top-0 bg-sbGreen text-white w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold text-[10px]">1</span>
+                    <h5 class="font-bold text-gray-800">Copy Referral Code</h5>
+                    <p class="mt-0.5">Copy the code <strong id="guide-ref-code" class="text-sbGreen">SB1001</strong> shown above. You will need to paste it during registration to claim your bonus.</p>
+                </li>
+                <li class="relative">
+                    <span class="absolute -left-[25px] top-0 bg-sbGreen text-white w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold text-[10px]">2</span>
+                    <h5 class="font-bold text-gray-800">Download & Install</h5>
+                    <p class="mt-0.5">Click the <strong>Download App</strong> button above to download the secure <strong>app-release.apk</strong>. Open and install it (allow installation from unknown sources if prompted).</p>
+                </li>
+                <li class="relative">
+                    <span class="absolute -left-[25px] top-0 bg-sbGreen text-white w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold text-[10px]">3</span>
+                    <h5 class="font-bold text-gray-800">Register & Earn</h5>
+                    <p class="mt-0.5">Launch the Starbucks PSP app. Enter your details, paste your referral code, and tap Sign Up to start your premium investment journey!</p>
+                </li>
+            </ol>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 border-t border-gray-200 text-center text-xs text-gray-500 mt-8">
+        <p class="mb-1">&copy; 2026 Starbucks PSP Corp. All Rights Reserved.</p>
+        <p class="text-[10px] text-gray-400">Disclaimer: This is a partner-based high-yield promotional reward platform.</p>
+    </footer>
+
+    <!-- Script to handle URL referral parsing and copying -->
+    <script>
+        // Parse the ref query parameter from the URL
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        const referralCode = getQueryParam('ref') || 'SB1001';
+        
+        // Update the visual referral code in the HTML
+        document.getElementById('referral-code-text').textContent = referralCode;
+        document.getElementById('guide-ref-code').textContent = referralCode;
+
+        // Dynamically update deep-link 'Open App' href
+        const openAppUrl = `https://prime-khatab.web.app/register?ref=${referralCode}`;
+        document.getElementById('open-app-btn').href = openAppUrl;
+
+        // Copy referral code function
+        function copyReferralCode() {
+            navigator.clipboard.writeText(referralCode).then(() => {
+                const toast = document.getElementById('copy-toast');
+                const copyIcon = document.getElementById('copy-icon');
+                
+                // Show copied toast
+                toast.classList.remove('opacity-0');
+                toast.classList.add('opacity-100');
+                
+                // Change copy icon to check icon
+                copyIcon.className = "fa-solid fa-check text-lg text-sbGreen";
+
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100');
+                    toast.classList.add('opacity-0');
+                    copyIcon.className = "fa-regular fa-copy text-lg";
+                }, 2000);
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>

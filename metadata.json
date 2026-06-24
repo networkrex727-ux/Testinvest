@@ -1,0 +1,8 @@
+{
+  "name": "StarBucks PSP",
+  "description": "A professional investment platform featuring an Android user app and web admin dashboard for managing fund plans and earnings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
